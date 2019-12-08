@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import Header from './Header';
-import PlayerList from './PlayerList';
-import AddPlayerForm from './AddPlayerForm';
-import '../App.css';
-
+import React, { Component } from "react";
+import { Provider } from "./Context";
+import Header from "./Header";
+import PlayerList from "./PlayerList";
+import AddPlayerForm from "./AddPlayerForm";
+import "../App.css";
 
 class App extends Component {
   state = {
@@ -35,47 +35,49 @@ class App extends Component {
   prevPlayerId = 4;
 
   handleScoreChange = (index, delta) => {
-    this.setState( prevState => ({
-      score: prevState.players[index].score += delta
+    this.setState(prevState => ({
+      score: (prevState.players[index].score += delta)
     }));
-  }
+  };
 
-  handleAddPlayer = (name) => {
-    this.setState( prevState => {
+  handleAddPlayer = name => {
+    this.setState(prevState => {
       return {
         players: [
           ...prevState.players,
           {
             name,
             score: 0,
-            id: this.prevPlayerId += 1
+            id: (this.prevPlayerId += 1)
           }
         ]
       };
     });
-  }
+  };
 
-  handleRemovePlayer = (id) => {
-    this.setState( prevState => {
+  handleRemovePlayer = id => {
+    this.setState(prevState => {
       return {
         players: prevState.players.filter(p => p.id !== id)
       };
     });
-  }
+  };
 
   render() {
     return (
-      <div className="scoreboard">
-        <Header players={this.state.players} />
+      <Provider>
+        <div className="scoreboard">
+          <Header players={this.state.players} />
 
-        <PlayerList 
-          players={this.state.players} 
-          changeScore={this.handleScoreChange}
-          removePlayer={this.handleRemovePlayer}   
-        />
-        
-        <AddPlayerForm addPlayer={this.handleAddPlayer} />
-      </div>
+          <PlayerList
+            players={this.state.players}
+            changeScore={this.handleScoreChange}
+            removePlayer={this.handleRemovePlayer}
+          />
+
+          <AddPlayerForm addPlayer={this.handleAddPlayer} />
+        </div>
+      </Provider>
     );
   }
 }
